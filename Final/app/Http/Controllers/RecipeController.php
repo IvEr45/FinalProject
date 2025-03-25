@@ -7,6 +7,25 @@ use Illuminate\Support\Facades\Auth;
 
 class RecipeController extends Controller
 {
+    public function prefill(Request $request)
+    {
+        $aiRecipeRaw = $request->input('ai_recipe_raw');
+
+        // Extract title, ingredients, and instructions using regex
+        preg_match('/Title:\s*(.*)/i', $aiRecipeRaw, $titleMatch);
+        preg_match('/Ingredients:\s*([\s\S]*?)Instructions:/i', $aiRecipeRaw, $ingredientsMatch);
+        preg_match('/Instructions:\s*([\s\S]*)/i', $aiRecipeRaw, $instructionsMatch);
+
+        $title = $titleMatch[1] ?? 'Untitled Recipe';
+        $ingredients = $ingredientsMatch[1] ?? 'No ingredients found.';
+        $instructions = $instructionsMatch[1] ?? 'No instructions found.';
+
+        // Redirect to create page with extracted data
+        return redirect()->route('recipes.create')
+                         ->with('prefill_title', trim($title))
+                         ->with('prefill_ingredients', trim($ingredients))
+                         ->with('prefill_instructions', trim($instructions));
+    }
     public function index()
     {
         $recipes = Recipe::where('user_id', Auth::id())->get();
