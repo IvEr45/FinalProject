@@ -14,6 +14,9 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
+    if (!auth()->check()) {
+        return redirect('/login');
+    }
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 

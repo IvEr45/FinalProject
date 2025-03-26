@@ -1,63 +1,167 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
+<x-slot name="header">
+    <div class="flex flex-col items-center">
+        <img src="{{ asset('images/logo.png') }}" alt="FlavorBot Logo" class="h-12 w-12"> 
+        <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200 ">
+            FlavorBot
         </h2>
-    </x-slot>
+    </div>
+</x-slot>
+
+
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
             {{-- AI Recipe Suggestion Form --}}
-            <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6 mb-6">
-                <h3 class="text-lg font-semibold">Get AI Recipe Suggestions</h3>
-                <form method="POST" action="{{ route('suggest.recipe') }}">
+            <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Get AI Recipe Suggestions</h3>
+                <form method="POST" action="{{ route('suggest.recipe') }}" class="space-y-4">
                     @csrf
                     <div>
-                        <label for="ingredients" class="block text-gray-700">Enter Ingredients</label>
-                        <textarea name="ingredients" class="w-full border rounded p-2" required></textarea>
+                        <label for="ingredients" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Enter Ingredients
+                        </label>
+                        <textarea 
+                            name="ingredients" 
+                            class="w-full border border-gray-300 dark:border-gray-700 rounded-lg p-3 
+                                   focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
+                                   dark:bg-gray-700 dark:text-gray-200" 
+                            rows="4" 
+                            placeholder="List your ingredients (e.g., chicken, tomatoes, pasta)"
+                            required
+                        ></textarea>
                     </div>
-                    <button type="submit" class="mt-4 bg-green-500 text-white px-4 py-2 rounded">Get Suggestion</button>
+                    <button 
+                        type="submit" 
+                        class="w-full bg-green-600 text-white px-4 py-2 rounded-lg 
+                               hover:bg-green-700 transition-colors duration-300 
+                               focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                    >
+                        Get Suggestion
+                    </button>
                 </form>
             </div>
 
             {{-- Display AI Response --}}
             @if(session('ai_recipe_raw'))
-                <div class="bg-gray-100 p-4 border rounded shadow-md">
-                    <h4 class="text-lg font-semibold">AI-Generated Recipe:</h4>
-                    <pre class="whitespace-pre-wrap">{{ session('ai_recipe_raw') }}</pre>
+                @php
+                    $aiRecipe = session('ai_recipe_raw');
+                    $isInvalidResponse = trim($aiRecipe) === "Please ask me about a recipe!";
+                @endphp
 
-                    {{-- Save Recipe Form --}}
-                    <form method="POST" action="{{ route('recipes.prefill') }}">
-                        @csrf
-                        <input type="hidden" name="ai_recipe_raw" value="{{ session('ai_recipe_raw') }}">
-                        <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Save Recipe</button>
-                    </form>
+                <div class="bg-gray-100 dark:bg-gray-800 p-6 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md">
+                    <h4 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">AI-Generated Recipe</h4>
+                    <pre class="bg-white dark:bg-gray-900 p-4 rounded-lg text-sm text-gray-800 dark:text-gray-200 
+                                overflow-x-auto whitespace-pre-wrap border border-gray-200 dark:border-gray-700">
+{{ $aiRecipe }}</pre>
+
+                    @if(!$isInvalidResponse)
+                        <form method="POST" action="{{ route('recipes.prefill') }}" class="mt-4">
+                            @csrf
+                            <input type="hidden" name="ai_recipe_raw" value="{{ $aiRecipe }}">
+                            <button 
+                                type="submit" 
+                                class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg 
+                                       hover:bg-blue-700 transition-colors duration-300 
+                                       focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            >
+                                Save Recipe
+                            </button>
+                        </form>
+                    @endif
                 </div>
             @endif
 
-            {{-- User's Recipes --}}
-            <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6 mt-6">
-                <h3 class="text-lg font-semibold">Your Recipes</h3>
-                <a href="{{ route('recipes.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">Add Recipe</a>
-                
-                @foreach (auth()->user()->recipes as $recipe)
-                    <div class="mt-4 border-b pb-2">
-                        <h3 class="text-lg font-semibold">{{ $recipe->title }}</h3>
-                        <p><strong>Ingredients:</strong> {{ $recipe->ingredients }}</p>
-                        <p><strong>Instructions:</strong> {{ $recipe->instructions }}</p>
-                        <div class="mt-2">
-                            <a href="{{ route('recipes.edit', $recipe->id) }}" class="text-blue-500">Edit</a> |
-                            <form action="{{ route('recipes.destroy', $recipe->id) }}" method="POST" class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-red-500">Delete</button>
-                            </form>
+            {{-- Two-Column Layout for Saved Recipes --}}
+            <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100">Your Recipes</h3>
+                    <a 
+                        href="{{ route('recipes.create') }}" 
+                        class="bg-blue-600 text-white px-4 py-2 rounded-lg 
+                               hover:bg-blue-700 transition-colors duration-300 
+                               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    >
+                        Add Recipe
+                    </a>
+                </div>
+
+                @if(auth()->user()->recipes->count() > 0)
+                    <div class="grid grid-cols-3 gap-6">
+                        {{-- Left: Recipe Titles --}}
+                        <div class="col-span-1 bg-gray-50 dark:bg-gray-900 p-4 rounded-lg border">
+                            <h4 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Recipe List</h4>
+                            <ul class="space-y-3">
+                                @foreach (auth()->user()->recipes as $recipe)
+                                    <li>
+                                    <button 
+    class="w-full text-left bg-white dark:bg-gray-800 border p-3 rounded-lg 
+           hover:bg-gray-200 dark:hover:bg-gray-700 transition text-white dark:text-white 
+           px-4"
+    onclick="displayRecipe(`{{ $recipe->id }}`, `{{ addslashes($recipe->title) }}`, 
+                            `{{ addslashes($recipe->ingredients) }}`, 
+                            `{{ addslashes($recipe->instructions) }}`)"
+>
+    {{ $recipe->title }}
+</button>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+
+                        {{-- Right: Recipe Details --}}
+                        <div class="col-span-2 bg-gray-100 dark:bg-gray-900 p-6 rounded-lg border" id="recipeDetails">
+                            <h4 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Recipe Details</h4>
+                            <div id="recipeContent">
+                                <p class="text-gray-500 dark:text-gray-400">Click on a recipe to view details.</p>
+                            </div>
                         </div>
                     </div>
-                @endforeach
+                @else
+                    <p class="text-gray-500 dark:text-gray-400 text-center py-4">
+                        You haven't added any recipes yet.
+                    </p>
+                @endif
             </div>
-
         </div>
     </div>
+
+    {{-- JavaScript to Display Recipe Details --}}
+    <script>
+        function displayRecipe(id, title, ingredients, instructions) {
+            let ingredientsList = ingredients.split("\n").map(item => `<li>${item.trim()}</li>`).join("");
+            ingredientsList = `<ul class="list-disc list-inside text-gray-700 dark:text-gray-400">${ingredientsList}</ul>`;
+
+            let instructionsList = instructions.split("\n").map(item => `<li>${item.trim()}</li>`).join("");
+            instructionsList = `<ul class="list-decimal list-inside text-gray-700 dark:text-gray-400">${instructionsList}</ul>`;
+
+            document.getElementById('recipeContent').innerHTML = `
+                <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">${title}</h3>
+                <p><strong class="text-gray-800 dark:text-gray-300">Ingredients:</strong></p>
+                ${ingredientsList}
+                <p class="mt-2"><strong class="text-gray-800 dark:text-gray-300">Instructions:</strong></p>
+                ${instructionsList}
+                <div class="mt-4 flex space-x-4">
+    <a href="/recipes/${id}/edit" 
+       class="bg-blue-600 text-white px-4 py-2 rounded-lg 
+              hover:bg-blue-700 transition-colors duration-300 
+              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+        Edit
+    </a>
+    <form action="/recipes/${id}" method="POST" onsubmit="return confirm('Are you sure you want to delete this recipe?');">
+        @csrf
+        @method('DELETE')
+        <button type="submit" 
+                class="bg-red-600 text-white px-4 py-2 rounded-lg 
+                       hover:bg-red-700 transition-colors duration-300 
+                       focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+            Delete
+        </button>
+    </form>
+</div>
+
+            `;
+        }
+    </script>
 </x-app-layout>

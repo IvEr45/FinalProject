@@ -31,7 +31,8 @@ class AIRecipeController extends Controller
         2. Step two
         3. Step three
         
-        Do not include unnecessary text. From here on, if user ask for a query not related to recipes, prompt user to ask again";
+        Do not include unnecessary text. From here on, if user ask for a query not related to recipes, say these exact words and nothing else:'Please ask me about a recipe!
+'";
 
         $fullPrompt = $systemInstruction . "\nUser: " . $userMessage;
 
