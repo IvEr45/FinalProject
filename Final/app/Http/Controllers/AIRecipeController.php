@@ -31,7 +31,7 @@ class AIRecipeController extends Controller
         2. Step two
         3. Step three
         
-        Do not include unnecessary text. Respond only to queries related to recipes or those that mention food items. For any other request, reply with exactly: 'Please ask me about a recipe!'";
+        Do not include unnecessary text. Respond only to queries related to recipes or those that mention food which you are then going to use to come up with a recipe. For any other request, reply with exactly: 'Please ask me about a recipe!'";
 
         $fullPrompt = $systemInstruction . "\nUser: " . $userMessage;
 
