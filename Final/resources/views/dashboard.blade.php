@@ -1,7 +1,7 @@
 <x-app-layout>
 <x-slot name="header">
     <div class="flex flex-col items-center">
-        <img src="{{ asset('images/logo.png') }}" alt="FlavorBot Logo" class="h-12 w-12"> 
+        <img src="{{ asset('images/logo1.png') }}" alt="FlavorBot Logo" class="h-12 w-12"> 
         <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200 ">
             FlavorBot
         </h2>
@@ -78,13 +78,14 @@
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100">Your Recipes</h3>
                     <a 
-                        href="{{ route('recipes.create') }}" 
-                        class="bg-blue-600 text-white px-4 py-2 rounded-lg 
-                               hover:bg-blue-700 transition-colors duration-300 
-                               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                    >
-                        Add Recipe
-                    </a>
+    href="{{ route('recipes.create') }}" 
+    class="bg-blue-600 text-gray px-4 py-2 rounded-lg 
+           hover:bg-blue-700 transition-colors duration-300 
+           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 
+           dark:text-white text-gray-900"
+>
+    Add Recipe
+</a>
                 </div>
 
                 @if(auth()->user()->recipes->count() > 0)
@@ -97,12 +98,11 @@
                                     <li>
                                     <button 
     class="w-full text-left bg-white dark:bg-gray-800 border p-3 rounded-lg 
-           hover:bg-gray-200 dark:hover:bg-gray-700 transition text-white dark:text-white 
+           hover:bg-gray-200 dark:hover:bg-gray-700 transition  text-gray-900 dark:text-white 
            px-4"
     onclick="displayRecipe(`{{ $recipe->id }}`, `{{ addslashes($recipe->title) }}`, 
                             `{{ addslashes($recipe->ingredients) }}`, 
-                            `{{ addslashes($recipe->instructions) }}`)"
->
+                            `{{ addslashes($recipe->instructions) }}`)">
     {{ $recipe->title }}
 </button>
                                     </li>
@@ -144,11 +144,12 @@
                 ${instructionsList}
                 <div class="mt-4 flex space-x-4">
     <a href="/recipes/${id}/edit" 
-       class="bg-blue-600 text-white px-4 py-2 rounded-lg 
-              hover:bg-blue-700 transition-colors duration-300 
-              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-        Edit
-    </a>
+   class="bg-blue-600 text-gray px-4 py-2 rounded-lg 
+          hover:bg-blue-700 transition-colors duration-300 
+          focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+          dark:text-white text-gray-900">
+    Edit
+</a>
     <form action="/recipes/${id}" method="POST" onsubmit="return confirm('Are you sure you want to delete this recipe?');">
         @csrf
         @method('DELETE')
