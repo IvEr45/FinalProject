@@ -11,7 +11,7 @@ class AIRecipeController extends Controller
         $request->validate([
             'ingredients' => 'required|string',
         ]);
-
+        session()->flash('ingredients', $request->input('ingredients'));
         $userMessage = $request->input('ingredients');
         $apiKey = env('GEMINI_API_KEY');
         $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={$apiKey}";
@@ -27,9 +27,9 @@ class AIRecipeController extends Controller
         - Ingredient 3
         
         Instructions:
-        1. Step one
-        2. Step two
-        3. Step three
+        Step one:
+        Step two:
+        Step three:
         
         Do not include unnecessary text. Respond only to queries related to recipes or those that mention food which you are then going to use to come up with a recipe. For any other request, reply with exactly: 'Please ask me about a recipe!'";
 

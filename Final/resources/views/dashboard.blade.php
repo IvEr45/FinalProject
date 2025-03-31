@@ -23,20 +23,22 @@
                             Enter Ingredients
                         </label>
                         <textarea 
-                            name="ingredients" 
-                            class="w-full border border-gray-300 dark:border-gray-700 rounded-lg p-3 
-                                   focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
-                                   dark:bg-gray-700 dark:text-gray-200" 
-                            rows="4" 
-                            placeholder="List your ingredients (e.g., chicken, tomatoes, pasta)"
-                            required
-                        ></textarea>
+    name="ingredients" 
+    class="w-full border border-gray-300 dark:border-gray-700 rounded-lg p-3 
+           focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
+           dark:bg-gray-700 dark:text-gray-200" 
+    rows="4" 
+    placeholder="List your ingredients (e.g., chicken, tomatoes, pasta)"
+    required
+>{{ session('ingredients') }}</textarea>
                     </div>
                     <button 
                         type="submit" 
-                        class="w-full bg-green-600 text-white px-4 py-2 rounded-lg 
-                               hover:bg-green-700 transition-colors duration-300 
-                               focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                        class="w-full bg-gray-100 dark:bg-gray-900 text-gray px-4 py-2 rounded-lg 
+                        dark:text-white
+                               hover:bg-indigo-700 transition-colors duration-300 
+                               hover:text-white
+                               font-bold"
                     >
                         Get Suggestion
                     </button>
@@ -79,10 +81,12 @@
                     <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100">Your Recipes</h3>
                     <a 
     href="{{ route('recipes.create') }}" 
-    class="bg-blue-600 text-gray px-4 py-2 rounded-lg 
-           hover:bg-blue-700 transition-colors duration-300 
-           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 
-           dark:text-white text-gray-900"
+    class="bg-gray-100 dark:bg-gray-900 px-4 py-2 rounded-lg 
+           hover:bg-indigo-700 transition-colors duration-300 
+            hover:text-white
+
+           font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 
+           dark:text-white text-gray"
 >
     Add Recipe
 </a>
@@ -144,9 +148,9 @@
                 ${instructionsList}
                 <div class="mt-4 flex space-x-4">
     <a href="/recipes/${id}/edit" 
-   class="bg-blue-600 text-gray px-4 py-2 rounded-lg 
-          hover:bg-blue-700 transition-colors duration-300 
-          focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+   class="bg-white-200 dark:bg-gray-800 text-gray px-4 py-2 rounded-lg 
+          
+          font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
           dark:text-white text-gray-900">
     Edit
 </a>
@@ -154,9 +158,9 @@
         @csrf
         @method('DELETE')
         <button type="submit" 
-                class="bg-red-600 text-white px-4 py-2 rounded-lg 
-                       hover:bg-red-700 transition-colors duration-300 
-                       focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                class="bg-indigo-600 text-white px-4 py-2 rounded-lg 
+                       hover:bg-indigo-700 transition-colors duration-300 
+                       focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
             Delete
         </button>
     </form>
