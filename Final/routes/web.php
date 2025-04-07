@@ -7,11 +7,14 @@ use App\Http\Controllers\AIRecipeController;
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('recipes', RecipeController::class);
+    Route::post('/suggest-recipe', [AIRecipeController::class, 'suggestRecipe'])->name('suggest.recipe');
+    Route::post('/recipes/prefill', [RecipeController::class, 'prefill'])->name('recipes.prefill');
 });
 
 Route::get('/', function () {
     return view('welcome');
 });
+
 
 Route::get('/dashboard', function () {
     if (!auth()->check()) {
@@ -25,8 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-Route::post('/suggest-recipe', [AIRecipeController::class, 'suggestRecipe'])->name('suggest.recipe');
-Route::post('/recipes/prefill', [RecipeController::class, 'prefill'])->name('recipes.prefill');
+
 
 
 

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="">
     <head>
+        <!-- In layouts/app.blade.php head section -->
+
     <script src="https://cdn.jsdelivr.net/npm/@heroicons/vue@latest" defer></script>
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
 <meta http-equiv="Pragma" content="no-cache">
@@ -40,6 +42,6 @@
             @include('layouts.footer')
         </div>
 
-        
+    
     </body>
 </html>

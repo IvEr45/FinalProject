@@ -1,11 +1,23 @@
+
 <x-app-layout>
+    
 <x-slot name="header">
+    
+    <a href="/dashboard">
     <div class="flex flex-col items-center">
-        <img src="{{ asset('images/logo1.png') }}" alt="FlavorBot Logo" class="h-12 w-12"> 
-        <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200 ">
-            FlavorBot
-        </h2>
-    </div>
+    <!-- Light mode logo -->
+    <img src="{{ asset('images/dark.png') }}" alt="FlavorBot Logo" 
+         class="h-12 w-12 block dark:hidden">
+
+    <!-- Dark mode logo -->
+    <img src="{{ asset('images/logo.png') }}" alt="FlavorBot Logo Dark" 
+         class="h-12 w-12 hidden dark:block">
+
+    <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">
+        FlavorBot
+    </h2>
+</div>
+    </a>
 </x-slot>
 
 
@@ -48,12 +60,12 @@
             {{-- Display AI Response --}}
             @if(session('ai_recipe_raw'))
                 @php
-                    $aiRecipe = session('ai_recipe_raw');
-                    $isInvalidResponse = trim($aiRecipe) === "Please ask me about a recipe!";
+                $aiRecipe = session('ai_recipe_raw');
+                $isInvalidResponse = !str_starts_with(trim($aiRecipe), "Title");
                 @endphp
 
                 <div class="bg-gray-100 dark:bg-gray-800 p-6 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md">
-                    <h4 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">AI-Generated Recipe</h4>
+                    <h4 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">FlavorBot Replies:</h4>
                     <pre class="bg-white dark:bg-gray-900 p-4 rounded-lg text-sm text-gray-800 dark:text-gray-200 
                                 overflow-x-auto whitespace-pre-wrap border border-gray-200 dark:border-gray-700">
 {{ $aiRecipe }}</pre>
@@ -64,9 +76,11 @@
                             <input type="hidden" name="ai_recipe_raw" value="{{ $aiRecipe }}">
                             <button 
                                 type="submit" 
-                                class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg 
-                                       hover:bg-blue-700 transition-colors duration-300 
-                                       focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                                class="w-full bg-gray-100 dark:bg-gray-900 text-gray px-4 py-2 rounded-lg 
+                        dark:text-white
+                               hover:bg-indigo-700 transition-colors duration-300 
+                               hover:text-white
+                               font-bold"
                             >
                                 Save Recipe
                             </button>
